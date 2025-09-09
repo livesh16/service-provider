@@ -1,8 +1,18 @@
 @import "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your existing theme variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* New reusable colors for buttons/cards */
+  --color-primary: #14b8a6; /* teal-500 */
+  --color-primary-hover: #0d9488; /* teal-600 */
+  --color-bg-light: #f9fafb; /* light gray for sections */
 }
 
 @theme inline {
@@ -12,6 +22,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -19,8 +30,22 @@
   }
 }
 
+/* Body styling */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Reusable classes for components */
+.btn {
+  @apply px-8 py-4 bg-[var(--color-primary)] text-white font-semibold rounded-lg shadow-lg transition hover:bg-[var(--color-primary-hover)];
+}
+
+.hero-text {
+  @apply drop-shadow-lg text-white;
+}
+
+.card {
+  @apply bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transform transition;
 }
