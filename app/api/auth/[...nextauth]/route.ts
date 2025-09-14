@@ -1,8 +1,11 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
 
-export const authOptions = {
+// Define auth options with types
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.AUTH_GOOGLE_ID!,
@@ -10,18 +13,17 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user }): Promise<boolean> {
       if (!user.email) return false;
 
       try {
-        // Upsert user and return the UUID
         const { data, error } = await supabaseServer
           .from("users")
           .upsert(
             { email: user.email, name: user.name },
             { onConflict: "email" }
           )
-          .select("id") // return the UUID
+          .select("id")
           .single();
 
         if (error) {
@@ -29,8 +31,8 @@ export const authOptions = {
           return false;
         }
 
-        // Attach UUID to user object
-        user.id = data.id;
+        // Attach Supabase UUID to user
+        (user as typeof user & { id: string }).id = data.id;
         return true;
       } catch (err) {
         console.error("SignIn error:", err);
@@ -38,20 +40,19 @@ export const authOptions = {
       }
     },
 
-    async jwt({ token, user }) {
-      // Store Supabase UUID in JWT
-      if (user?.id) {
-        token.userId = user.id;
+    async jwt({ token, user }): Promise<JWT> {
+      if (user && "id" in user) {
+        token.userId = (user as { id: string }).id;
       }
       return token;
     },
 
-    async session({ session, token }) {
+    async session({ session, token }): Promise<Session> {
       return {
         ...session,
         user: {
           ...session.user,
-          id: token.userId, // this is now Supabase UUID
+          id: token.userId as string,
         },
       };
     },
