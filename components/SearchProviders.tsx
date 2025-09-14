@@ -5,8 +5,18 @@ import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import Link from "next/link";
 
+type Provider = {
+  id: string;
+  name: string;
+  username: string;
+  city: string | null;
+  image_url: string | null;
+  rating: number | null;
+  verified: boolean | null;
+};
+
 export default function SearchProviders() {
-  const [providers, setProviders] = useState<any[]>([]);
+  const [providers, setProviders] = useState<Provider[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
