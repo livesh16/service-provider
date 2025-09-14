@@ -39,7 +39,7 @@ body {
 
 /* Reusable classes for components */
 .btn {
-  @apply px-8 py-4 bg-[var(--color-primary)] text-white font-semibold rounded-lg shadow-lg transition hover:bg-[var(--color-primary-hover)];
+  @apply px-8 py-4 bg-[var(--color-primary)] text-white font-semibold rounded-lg shadow-lg transition cursor-pointer hover:bg-[var(--color-primary-hover)];
 }
 
 .hero-text {
@@ -47,5 +47,5 @@ body {
 }
 
 .card {
-  @apply bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transform transition;
+  @apply bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transform transition inline-block;
 }

@@ -1,43 +1,56 @@
-import RestaurantCard from "@/components/RestaurantCard";
+import { supabase } from "@/lib/supabaseClient";
+import ProviderCard from "@/components/ProviderCard";
+import Footer from "@/components/Footer";
+import Link from "next/link";
 
-export default function Home() {
-  const restaurants = [
-    { name: "Le Blue Lagoon", description: "Exquisite local cuisine", image: "/restaurants/le-blue-lagoon.jpg" },
-    { name: "Sunset Grill", description: "Seafood delights", image: "/restaurants/sunset-grill.jpg" },
-    { name: "Tropical Bites", description: "Fresh tropical flavors", image: "/restaurants/tropical-bites.jpg" },
-  ];
+export default async function Home() {
+  const { data: providers, error } = await supabase
+  .from('providers')
+  .select('*')
+  .eq('featured', true);
 
   return (
     <>
       {/* Hero Section */}
       <section
         className="relative w-full h-screen flex items-center justify-center overflow-hidden"
-        style={{ backgroundImage: 'url(menu.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+        style={{
+          backgroundImage: 'url(https://qbjgfnlpmcyxjxopsnvt.supabase.co/storage/v1/object/public/service_provider_hero/service_provider.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
       >
         <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
         <div className="relative z-10 text-center px-4">
-          <h1 className="hero-text text-5xl md:text-6xl font-extrabold">Discover the Best Menus in Mauritius</h1>
+          <h1 className="hero-text text-5xl md:text-6xl font-extrabold">
+            Find Trusted Local Professionals in Mauritius
+          </h1>
           <p className="mt-4 text-xl md:text-2xl text-gray-200 drop-shadow-md">
-            Explore, taste, and enjoy your favorite restaurants.
+            Plumbers, Electricians, Cleaners, and more — fast, reliable, and nearby.
           </p>
-          <button className="btn mt-8">Explore Restaurants</button>
+          <Link href="/services">
+            <button className="btn mt-8">Browse Services</button>
+          </Link>
         </div>
       </section>
 
-      {/* Featured Restaurants */}
+      {/* Featured Providers */}
       <section className="py-20 px-8 bg-[var(--color-bg-light)]">
-        <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">Featured Restaurants</h2>
+        <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">
+          Top-Rated Providers
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {restaurants.map((r) => (
-            <RestaurantCard
-              key={r.name}
-              name={r.name}
-              description={r.description}
-              image={r.image}
+          {providers?.map((p) => (
+            <ProviderCard
+              key={p.id}
+              provider={p}
             />
           ))}
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </>
   );
 }
