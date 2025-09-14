@@ -5,8 +5,14 @@ import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import Link from "next/link";
 
+type Category = {
+  id: string;
+  name: string;
+  icon: string,
+};
+
 export default function CategoriesBrowser() {
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 

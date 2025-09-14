@@ -6,9 +6,33 @@ import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import Link from "next/link";
 
+type Category = {
+  id: string;
+  name: string;
+};
+
+type Provider = {
+  id: string;
+  name: string;
+  username: string;
+  city: string | null;
+  image_url: string | null;
+  rating: number | null;
+};
+
+type Service = {
+  id: string;
+  name: string;
+  description: string | null;
+  price_estimate: number | null;
+  provider_id: string;
+  provider: Provider;
+  category: Category;
+};
+
 export default function ServicesBrowser() {
-  const [services, setServices] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
@@ -58,7 +82,7 @@ export default function ServicesBrowser() {
 
     try {
       // If a city filter is provided -> first fetch provider IDs for that city
-      let providerIds: any[] | null = null;
+      let providerIds: string[] | null = null;
       if (cityToUse) {
         const { data: providers, error: provErr } = await supabase
           .from("providers")
@@ -72,7 +96,7 @@ export default function ServicesBrowser() {
           return;
         }
 
-        providerIds = (providers || []).map((p: any) => p.id);
+        providerIds = (providers || []).map((p: { id: string }) => p.id);
 
         // If no providers in that city, return early with no services
         if (!providerIds.length) {
