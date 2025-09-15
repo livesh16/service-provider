@@ -8,6 +8,7 @@ interface Provider {
   name: string;
   username: string;
   description?: string;
+  phone_number?: string;
   image_url?: string;
   rating?: number;
   city?: string;
@@ -29,23 +30,27 @@ export default async function ProviderPage({ params }: Props) {
     const { username } = params;
   
     // Fetch provider info
-    const { data: provider, error: providerError } = await supabase
-      .from<Provider>("providers")
+    const { data, error } = await supabase
+      .from("providers")
       .select("*")
       .eq("username", username)
       .limit(1)
       .single();
+  
+    const provider = data as Provider | null;
   
     if (!provider) {
       return <p className="text-center mt-20 text-gray-700 text-xl">Provider not found.</p>;
     }
   
     // Fetch services for this provider
-    const { data: services, error: servicesError } = await supabase
-      .from<Service>("services")
+    const { data: dataServices, error: servicesError } = await supabase
+      .from("services")
       .select("*")
       .eq("provider_id", provider.id);
   
+      const services = dataServices as Service[] | null;
+      
       return (
         <div className="relative flex flex-col items-center justify-start pt-28 sm:pt-32 md:pt-36 lg:pt-40 min-h-screen px-6 bg-gray-50">
           {/* Provider Info Card */}

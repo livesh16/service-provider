@@ -19,6 +19,8 @@ interface ProviderCardProps {
 export default function ProviderCard({ provider}: ProviderCardProps) {
     const {name, username, city, description, image_url, rating } = provider;
 
+    const fallbackProfilePic = "https://qbjgfnlpmcyxjxopsnvt.supabase.co/storage/v1/object/public/service_providers_other/blank_profile_pic.png";
+
     return (
         // We use `className="contents"` on the Link so the rendered <a> does NOT create
         // a layout box (display: contents). This prevents the anchor from changing
@@ -31,7 +33,7 @@ export default function ProviderCard({ provider}: ProviderCardProps) {
             <div className="card">
                 <div className="relative aspect-square w-45 mx-auto rounded-full overflow-hidden bg-gray-100">
                 <Image
-                    src={image_url}
+                    src={image_url ?? fallbackProfilePic}
                     alt={name}
                     fill
                     className="object-cover"

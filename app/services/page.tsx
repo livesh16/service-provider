@@ -1,4 +1,5 @@
 import ServicesBrowser from "@/components/ServicesBrowser";
+import { Suspense } from "react";
 
 export default function ServicesPage() {
   return (
@@ -7,7 +8,9 @@ export default function ServicesPage() {
         Find Services
       </h1>
 
-      <ServicesBrowser />
+      <Suspense fallback={<div className="text-center py-20">Loading services...</div>}>
+        <ServicesBrowser />
+      </Suspense>
     </div>
   );
 }

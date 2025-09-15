@@ -20,6 +20,8 @@ type Provider = {
   rating: number | null;
 };
 
+type ProviderCityRow = { city: string | null };
+
 type Service = {
   id: string;
   name: string;
@@ -55,18 +57,28 @@ export default function ServicesBrowser() {
   useEffect(() => {
     const fetchCities = async () => {
       const { data, error } = await supabase
-        .from("providers")
-        .select("city", { distinct: true })
-        .not("city", "is", null)
-        .order("city", { ascending: true });
+      .from("distinct_city")
+      .select("city")
 
       if (error) {
         console.error("Error fetching cities:", error);
         return;
       }
 
-      const cities = data?.map((p) => p.city) || [];
-      setCities(cities);
+      // supabase may infer a ParserError union; cast via `unknown` first to avoid TS complaining
+      const rows = (data as unknown) as ProviderCityRow[] | null;
+      if (!rows || rows.length === 0) {
+        setCities([]);
+        return;
+      }
+
+      // map -> filter with a proper type guard to remove null/empty values
+      const nonNullCities = rows
+        .map((r) => r.city)
+        .filter((c): c is string => c !== null && c !== undefined && c !== "");
+
+      const unique = Array.from(new Set(nonNullCities));
+      setCities(unique);
     };
 
     fetchCities();
@@ -76,37 +88,36 @@ export default function ServicesBrowser() {
   const handleSearch = async (cat?: string, cityParam?: string) => {
     setIsLoading(true);
     setHasSearched(true);
-
+  
     const catToUse = cat ?? category;
     const cityToUse = cityParam ?? city;
-
+  
     try {
-      // If a city filter is provided -> first fetch provider IDs for that city
+      // Fetch provider IDs if a city filter is applied
       let providerIds: string[] | null = null;
       if (cityToUse) {
         const { data: providers, error: provErr } = await supabase
           .from("providers")
           .select("id")
           .eq("city", cityToUse);
-
+  
         if (provErr) {
           console.error("Error fetching providers for city:", provErr);
           setServices([]);
           setIsLoading(false);
           return;
         }
-
-        providerIds = (providers || []).map((p: { id: string }) => p.id);
-
-        // If no providers in that city, return early with no services
+  
+        providerIds = (providers || []).map((p) => p.id);
+  
         if (!providerIds.length) {
           setServices([]);
           setIsLoading(false);
           return;
         }
       }
-
-      // Build services query
+  
+      // Build the services query
       let queryBuilder = supabase
         .from("services")
         .select(`
@@ -117,31 +128,36 @@ export default function ServicesBrowser() {
           provider:providers(id,name,username,city,image_url,rating),
           category:categories(id,name),
           provider_id
-        `);
-
-      // Always exclude services without a provider (so UI doesn't need to filter)
-      queryBuilder = queryBuilder.not("provider_id", "is", null);
-
-      // If we have providerIds (city filter), use .in
-      if (providerIds) {
-        queryBuilder = queryBuilder.in("provider_id", providerIds);
-      }
-
-      if (catToUse) {
-        queryBuilder = queryBuilder.eq("category_id", catToUse);
-      }
-
-      if (searchQuery) {
-        // full text search on the name,description columns
-        queryBuilder = queryBuilder.textSearch("name,description", searchQuery);
-      }
-
+        `)
+        .not("provider_id", "is", null); // always exclude services without a provider
+  
+      if (providerIds) queryBuilder = queryBuilder.in("provider_id", providerIds);
+      if (catToUse) queryBuilder = queryBuilder.eq("category_id", catToUse);
+      if (searchQuery) queryBuilder = queryBuilder.textSearch("name,description", searchQuery);
+  
       const { data, error } = await queryBuilder;
+  
       if (error) {
         console.error("Error querying services:", error);
         setServices([]);
+        return;
+      }
+  
+      if (data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const fixedServices: Service[] = (data as any[]).map((s) => ({
+          id: s.id,
+          name: s.name,
+          description: s.description,
+          price_estimate: s.price_estimate,
+          provider_id: s.provider_id,
+          provider: s.provider,
+          category: s.category,
+        }));
+  
+        setServices(fixedServices);
       } else {
-        setServices(data || []);
+        setServices([]);
       }
     } catch (err) {
       console.error("Unexpected error searching services:", err);
@@ -150,6 +166,7 @@ export default function ServicesBrowser() {
       setIsLoading(false);
     }
   };
+  
 
   // Auto-run search if category or city is in URL (only if at least one exists)
   useEffect(() => {
