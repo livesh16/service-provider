@@ -8,10 +8,16 @@ import { HiMenu, HiX } from "react-icons/hi";
 export default function Navbar() {
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState<string>("");
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  // Desktop links (horizontal)
+  // Handle mobile link click
+  const handleMobileLinkClick = (href: string) => {
+    setActiveLink(href); // set active color
+    setIsOpen(false); // close menu
+  };
+
   const desktopLinks = (
     <>
       <li className="hover:text-gray-900 transition text-lg">
@@ -63,13 +69,20 @@ export default function Navbar() {
     </>
   );
 
-  // Mobile links (vertical)
+  const mobileLinkClass = (href: string) =>
+    `block px-4 py-2 rounded transition cursor-pointer ${
+      activeLink === href
+        ? "bg-blue-100 text-blue-700 font-semibold"
+        : "hover:bg-gray-100 hover:text-gray-900"
+    }`;
+
   const mobileLinks = (
     <>
       <li>
         <Link
           href="/"
-          className="block px-4 py-2 hover:text-gray-900 hover:bg-gray-100 rounded transition"
+          className={mobileLinkClass("/")}
+          onClick={() => handleMobileLinkClick("/")}
         >
           Home
         </Link>
@@ -77,7 +90,8 @@ export default function Navbar() {
       <li>
         <Link
           href="/service-providers"
-          className="block px-4 py-2 hover:text-gray-900 hover:bg-gray-100 rounded transition"
+          className={mobileLinkClass("/service-providers")}
+          onClick={() => handleMobileLinkClick("/service-providers")}
         >
           Providers
         </Link>
@@ -85,7 +99,8 @@ export default function Navbar() {
       <li>
         <Link
           href="/categories"
-          className="block px-4 py-2 hover:text-gray-900 hover:bg-gray-100 rounded transition"
+          className={mobileLinkClass("/categories")}
+          onClick={() => handleMobileLinkClick("/categories")}
         >
           Categories
         </Link>
@@ -93,14 +108,20 @@ export default function Navbar() {
       <li>
         <Link
           href="/about"
-          className="block px-4 py-2 hover:text-gray-900 hover:bg-gray-100 rounded transition"
+          className={mobileLinkClass("/about")}
+          onClick={() => handleMobileLinkClick("/about")}
         >
           About
         </Link>
       </li>
 
       {status !== "loading" && session && session.user && (
-        <li className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 rounded transition">
+        <li
+          className={`flex items-center gap-3 px-4 py-2 rounded transition ${
+            activeLink === "user" ? "bg-blue-100" : "hover:bg-gray-100"
+          }`}
+          onClick={() => handleMobileLinkClick("user")}
+        >
           {session.user.image && (
             <img
               src={session.user.image}
@@ -117,15 +138,21 @@ export default function Navbar() {
       <li className="px-4 py-2">
         {status === "loading" ? null : session ? (
           <button
-            onClick={() => signOut()}
-            className="w-full text-left px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+            onClick={() => {
+              signOut();
+              handleMobileLinkClick("logout");
+            }}
+            className={mobileLinkClass("logout") + " w-full text-left bg-red-600 text-white hover:bg-red-700"}
           >
             Logout
           </button>
         ) : (
           <button
-            onClick={() => signIn("google")}
-            className="w-full text-left px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            onClick={() => {
+              signIn("google");
+              handleMobileLinkClick("login");
+            }}
+            className={mobileLinkClass("login") + " w-full text-left bg-blue-600 text-white hover:bg-blue-700"}
           >
             Login
           </button>
@@ -136,7 +163,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-white/90 backdrop-blur-md fixed top-0 z-50 shadow-md">
-        <div className="flex justify-between items-center py-6 px-6 md:px-8">
+      <div className="flex justify-between items-center py-6 px-6 md:px-8">
         {/* Logo */}
         <div className="text-2xl font-bold text-gray-900">MoService</div>
 
