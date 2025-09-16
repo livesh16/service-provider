@@ -36,14 +36,12 @@ export default function Navbar() {
       {status !== "loading" && session?.user && (
         <li className="flex items-center gap-2">
           {session.user.image && (
-            <Image
-              src={session.user.image}
-              alt={session.user.name || "User"}
-              width={24}
-              height={24}
-              className="rounded-full border-2 border-gray-300"
-            />
-          )}
+            <img
+            src={session.user.image}
+            alt={session.user.name || "User"}
+            className="w-6 h-6 rounded-full border-2 border-gray-300"
+          />
+        )}
           <span className="text-gray-900 font-medium text-md">
             {session.user.name || "User"}
           </span>
@@ -125,12 +123,10 @@ export default function Navbar() {
           onClick={() => handleMobileLinkClick("user")}
         >
           {session.user.image && (
-            <Image
+            <img
               src={session.user.image}
               alt={session.user.name || "User"}
-              width={32}
-              height={32}
-              className="rounded-full border-2 border-gray-300"
+              className="w-8 h-8 rounded-full border-2 border-gray-300"
             />
           )}
           <span className="text-gray-900 font-medium">

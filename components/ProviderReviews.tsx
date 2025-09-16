@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useSession, signIn } from "next-auth/react";
+import { FaSpinner } from "react-icons/fa";
+import StarRating from "./StarRating";
 
 interface Review {
   id: string;
@@ -18,14 +20,17 @@ interface Props {
 }
 
 export default function ProviderReviews({ providerId }: Props) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [rating, setRating] = useState<number>(5);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fetchingReviews, setFetchingReviews] = useState(true);
 
+  // Fetch reviews for provider
   const fetchReviews = async () => {
+    setFetchingReviews(true);
     const { data, error } = await supabase
       .from("reviews")
       .select("id, provider_id, user_id, user_name, rating, comment, created_at")
@@ -35,16 +40,17 @@ export default function ProviderReviews({ providerId }: Props) {
     if (error) {
       console.error("Supabase error:", error);
       setError("Failed to fetch reviews.");
-      return;
+    } else {
+      setReviews(data || []);
     }
-
-    setReviews(data);
+    setFetchingReviews(false);
   };
 
   useEffect(() => {
     fetchReviews();
-  }, []);
+  }, [providerId]);
 
+  // Handle new review submission
   const handleSubmit = async () => {
     if (!session) {
       setError("You must be logged in to leave a review.");
@@ -83,7 +89,12 @@ export default function ProviderReviews({ providerId }: Props) {
         Reviews
       </h2>
 
-      {reviews.length > 0 ? (
+      {/* Reviews List */}
+      {fetchingReviews ? (
+        <div className="flex justify-center items-center py-12">
+          <FaSpinner className="animate-spin text-gray-500 text-3xl" />
+        </div>
+      ) : reviews.length > 0 ? (
         <div className="space-y-4">
           {reviews.map((r) => (
             <div
@@ -107,20 +118,18 @@ export default function ProviderReviews({ providerId }: Props) {
 
       {/* Review Form or Login Button */}
       <div className="mt-8">
-        {session ? (
+        {status === "loading" ? (
+          <div className="flex justify-center">
+            <FaSpinner className="animate-spin text-gray-500 text-2xl" />
+          </div>
+        ) : session ? (
           <>
             <h3 className="text-xl font-semibold mb-2">Leave a review</h3>
-            <div className="flex items-center gap-2 mb-2">
-              <label>Rating:</label>
-              <input
-                type="number"
-                min={1}
-                max={5}
-                value={rating}
-                onChange={(e) => setRating(Number(e.target.value))}
-                className="border px-2 py-1 rounded w-20"
-              />
+            <div className="flex flex-col mb-2">
+              <label className="mb-1 font-medium">Rating:</label>
+              <StarRating rating={rating} setRating={setRating} />
             </div>
+
             <textarea
               placeholder="Write a comment (optional)"
               value={comment}

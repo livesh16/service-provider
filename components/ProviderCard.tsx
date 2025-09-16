@@ -45,12 +45,14 @@ export default function ProviderCard({ provider}: ProviderCardProps) {
                 <p className="mt-2 text-gray-600">{description}</p>
                     {/* Rating and City */}
                     <div className="mt-4 flex justify-center items-center gap-10 px-4">
-                        {rating && <p className="text-yellow-500 font-semibold">⭐ {rating}</p>}
-                            {city && (
+                        {rating !== undefined && (
+                            <p className="text-yellow-500 font-semibold">⭐ {rating.toFixed(1)}</p>
+                        )}
+                        {city && (
                             <p className="text-gray-500 flex items-center gap-1">
                                 <span>📍</span> {city}
                             </p>
-                            )}
+                        )}
                     </div>
                 </div>
             </div>

@@ -50,7 +50,7 @@ export default async function ProviderPage({ params }: Props) {
       .eq("provider_id", provider.id);
   
       const services = dataServices as Service[] | null;
-      
+
       return (
         <div className="relative flex flex-col items-center justify-start pt-28 sm:pt-32 md:pt-36 lg:pt-40 min-h-screen px-6 bg-gray-50">
           {/* Provider Info Card */}
@@ -78,8 +78,8 @@ export default async function ProviderPage({ params }: Props) {
                 {provider.description}
               </p>
               <div className="mt-3 flex flex-wrap justify-center md:justify-start items-center gap-4">
-                {provider.rating && (
-                  <p className="text-yellow-500 font-semibold">⭐ {provider.rating}</p>
+                {provider.rating !== undefined && (
+                  <p className="text-yellow-500 font-semibold">⭐ {provider.rating.toFixed(1)}</p>
                 )}
                 {provider.city && (
                   <p className="text-gray-500 flex items-center gap-1">
@@ -87,9 +87,9 @@ export default async function ProviderPage({ params }: Props) {
                   </p>
                 )}
                 {provider.phone_number && (
-                    <p className="text-gray-500 flex items-center gap-1">
-                        <span>📞</span> {provider.phone_number}
-                    </p>
+                  <p className="text-gray-500 flex items-center gap-1">
+                    <span>📞</span> {provider.phone_number}
+                  </p>
                 )}
               </div>
             </div>
