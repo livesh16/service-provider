@@ -1,5 +1,4 @@
 import ProviderReviews from "@/components/ProviderReviews";
-import SessionWrapper from "@/components/SessionWrapper";
 import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 
@@ -128,9 +127,7 @@ export default async function ProviderPage({ params }: Props) {
             )}
           </section>
 
-          <SessionWrapper>
-            <ProviderReviews providerId={provider.id} />
-          </SessionWrapper>        
+          <ProviderReviews providerId={provider.id} />
     </div>
     );
 }

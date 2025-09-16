@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]/route"; // points to your NextAuth config
+  import { authOptions } from "../api/auth/[...nextauth]/route"; // points to your NextAuth config
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
