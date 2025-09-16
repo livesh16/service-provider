@@ -276,7 +276,7 @@ export default function ServicesBrowser() {
                         <span>₹ {service.price_estimate}</span>
                       )}
                       {service.provider?.city && <span>📍 {service.provider.city}</span>}
-                      {service.provider?.rating && <span>⭐ {service.provider.rating}</span>}
+                      {service.provider?.rating && <span>⭐ {service.provider.rating.toFixed(1)}</span>}
                       {service.category?.name && (
                         <span className="italic">({service.category.name})</span>
                       )}
