@@ -22,11 +22,11 @@ interface Service {
 }
 
 interface Props {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }
 
 export default async function ProviderPage({ params }: Props) {
-    const { username } = params;
+    const { username } = await params;
   
     // Fetch provider info
     const { data, error } = await supabase
@@ -49,6 +49,13 @@ export default async function ProviderPage({ params }: Props) {
       .eq("provider_id", provider.id);
   
       const services = dataServices as Service[] | null;
+
+        // Fetch reviews (public data)
+        const { data: reviews } = await supabase
+        .from("reviews")
+        .select("id, provider_id, user_id, user_name, rating, comment, created_at")
+        .eq("provider_id", provider.id)
+        .order("created_at", { ascending: false });
 
       return (
         <div className="relative flex flex-col items-center justify-start pt-28 sm:pt-32 md:pt-36 lg:pt-40 min-h-screen px-6 bg-gray-50">
@@ -127,7 +134,7 @@ export default async function ProviderPage({ params }: Props) {
             )}
           </section>
 
-          <ProviderReviews providerId={provider.id} />
+          <ProviderReviews providerId={provider.id} initialReviews={reviews || []}/>
     </div>
     );
 }

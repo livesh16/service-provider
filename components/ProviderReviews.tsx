@@ -17,16 +17,17 @@ interface Review {
 
 interface Props {
   providerId: string;
+  initialReviews: Review[];
 }
 
-export default function ProviderReviews({ providerId }: Props) {
+export default function ProviderReviews({ providerId, initialReviews}: Props) {
   const { data: session, status } = useSession();
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [rating, setRating] = useState<number>(5);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [fetchingReviews, setFetchingReviews] = useState(true);
+  const [fetchingReviews, setFetchingReviews] = useState(false);
 
   // Fetch reviews for provider
   const fetchReviews = async () => {
@@ -45,10 +46,6 @@ export default function ProviderReviews({ providerId }: Props) {
     }
     setFetchingReviews(false);
   };
-
-  useEffect(() => {
-    fetchReviews();
-  }, [providerId]);
 
   // Handle new review submission
   const handleSubmit = async () => {
