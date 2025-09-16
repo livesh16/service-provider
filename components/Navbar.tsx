@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image"; // <-- import Image from Next.js
 import { signIn, signOut, useSession } from "next-auth/react";
 import { HiMenu, HiX } from "react-icons/hi";
 
@@ -12,10 +13,9 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  // Handle mobile link click
   const handleMobileLinkClick = (href: string) => {
-    setActiveLink(href); // set active color
-    setIsOpen(false); // close menu
+    setActiveLink(href);
+    setIsOpen(false);
   };
 
   const desktopLinks = (
@@ -33,13 +33,15 @@ export default function Navbar() {
         <Link href="/about">About</Link>
       </li>
 
-      {status !== "loading" && session && session.user && (
+      {status !== "loading" && session?.user && (
         <li className="flex items-center gap-2">
           {session.user.image && (
-            <img
+            <Image
               src={session.user.image}
               alt={session.user.name || "User"}
-              className="w-6 h-6 rounded-full border-2 border-gray-300"
+              width={24}
+              height={24}
+              className="rounded-full border-2 border-gray-300"
             />
           )}
           <span className="text-gray-900 font-medium text-md">
@@ -115,7 +117,7 @@ export default function Navbar() {
         </Link>
       </li>
 
-      {status !== "loading" && session && session.user && (
+      {status !== "loading" && session?.user && (
         <li
           className={`flex items-center gap-3 px-4 py-2 rounded transition ${
             activeLink === "user" ? "bg-blue-100" : "hover:bg-gray-100"
@@ -123,10 +125,12 @@ export default function Navbar() {
           onClick={() => handleMobileLinkClick("user")}
         >
           {session.user.image && (
-            <img
+            <Image
               src={session.user.image}
               alt={session.user.name || "User"}
-              className="w-8 h-8 rounded-full border-2 border-gray-300"
+              width={32}
+              height={32}
+              className="rounded-full border-2 border-gray-300"
             />
           )}
           <span className="text-gray-900 font-medium">
@@ -142,7 +146,10 @@ export default function Navbar() {
               signOut();
               handleMobileLinkClick("logout");
             }}
-            className={mobileLinkClass("logout") + " w-full text-left bg-red-600 text-white hover:bg-red-700"}
+            className={
+              mobileLinkClass("logout") +
+              " w-full text-left bg-red-600 text-white hover:bg-red-700"
+            }
           >
             Logout
           </button>
@@ -152,7 +159,10 @@ export default function Navbar() {
               signIn("google");
               handleMobileLinkClick("login");
             }}
-            className={mobileLinkClass("login") + " w-full text-left bg-blue-600 text-white hover:bg-blue-700"}
+            className={
+              mobileLinkClass("login") +
+              " w-full text-left bg-blue-600 text-white hover:bg-blue-700"
+            }
           >
             Login
           </button>
@@ -164,8 +174,17 @@ export default function Navbar() {
   return (
     <nav className="w-full bg-white/90 backdrop-blur-md fixed top-0 z-50 shadow-md">
       <div className="flex justify-between items-center py-6 px-6 md:px-8">
-        {/* Logo */}
-        <div className="text-2xl font-bold text-gray-900">MoService</div>
+        {/* Logo Image */}
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src="https://qbjgfnlpmcyxjxopsnvt.supabase.co/storage/v1/object/public/service_providers_other/logo.png"
+            alt="MoService Logo"
+            width={40}      // small logo width
+            height={40}     // small logo height
+            className="object-contain"
+          />
+          <span className="text-2xl font-bold text-gray-900">MoService</span>
+        </Link>
 
         {/* Desktop Links */}
         <ul className="hidden md:flex gap-8 text-gray-700 font-medium items-center">
