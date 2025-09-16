@@ -97,7 +97,7 @@ export default function SearchProviders() {
                   <p className="text-gray-500">@{provider.username}</p>
                   <div className="flex gap-3 mt-1 items-center text-gray-500 text-sm">
                     {provider.city && <span>📍 {provider.city}</span>}
-                    {provider.rating && <span>⭐ {provider.rating}</span>}
+                    {provider.rating && <span>⭐ {provider.rating.toFixed(1)}</span>}
                     {provider.verified && (
                       <span className="text-blue-600 font-medium">
                         ✔ Verified
