@@ -25,6 +25,8 @@ interface Props {
   params: Promise<{ username: string }>;
 }
 
+const blank_profile_pic = "https://qbjgfnlpmcyxjxopsnvt.supabase.co/storage/v1/object/public/service_providers_other/blank_profile_pic.png";
+
 export default async function ProviderPage({ params }: Props) {
     const { username } = await params;
   
@@ -61,16 +63,14 @@ export default async function ProviderPage({ params }: Props) {
         <div className="relative flex flex-col items-center justify-start pt-28 sm:pt-32 md:pt-36 lg:pt-40 min-h-screen px-6 bg-gray-50">
           {/* Provider Info Card */}
           <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 mb-16">
-            {provider.image_url && (
-              <div className="relative w-32 h-32 md:w-60 md:h-60 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
-                <Image
-                  src={provider.image_url}
-                  alt={provider.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
+          <div className="relative w-32 h-32 md:w-60 md:h-60 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+              <Image
+                src={provider.image_url || blank_profile_pic} // 👈 fallback image
+                alt={provider.name}
+                fill
+                className="object-cover"
+              />
+            </div>
             <div className="text-center md:text-left mt-4 md:mt-0 flex-1">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
                 {provider.name}
