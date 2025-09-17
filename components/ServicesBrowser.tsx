@@ -273,7 +273,7 @@ export default function ServicesBrowser() {
                     <p className="text-gray-700">{service.description}</p>
                     <div className="flex gap-3 mt-1 items-center text-gray-500 text-sm">
                       {service.price_estimate && (
-                        <span>₹ {service.price_estimate}</span>
+                        <span>Rs {service.price_estimate}</span>
                       )}
                       {service.provider?.city && <span>📍 {service.provider.city}</span>}
                       {service.provider?.rating && <span>⭐ {service.provider.rating.toFixed(1)}</span>}
