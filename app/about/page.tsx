@@ -47,7 +47,7 @@ export default function AboutPage() {
             platform? Reach out to us — we’d love to hear from you.
           </p>
           <Link
-            href="mailto:yourname@example.com"
+            href="mailto:contact@mauserve.com"
             className="inline-block px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition"
           >
             Email Us
