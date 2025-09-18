@@ -18,6 +18,7 @@ type Provider = {
   city: string | null;
   image_url: string | null;
   rating: number | null;
+  verified: boolean;
 };
 
 type ProviderCityRow = { city: string | null };
@@ -119,18 +120,11 @@ export default function ServicesBrowser() {
   
       // Build the services query
       let queryBuilder = supabase
-        .from("services")
-        .select(`
-          id,
-          name,
-          description,
-          price_estimate,
-          provider:providers(id,name,username,city,image_url,rating),
-          category:categories(id,name),
-          provider_id
-        `)
-        .not("provider_id", "is", null); // always exclude services without a provider
-  
+      .from("services_browser")
+      .select("*")
+      .order("provider->rating", { ascending: false }); // works since provider is JSON    
+      //.limit(20); // <- only fetch top 20 services
+
       if (providerIds) queryBuilder = queryBuilder.in("provider_id", providerIds);
       if (catToUse) queryBuilder = queryBuilder.eq("category_id", catToUse);
       if (searchQuery) queryBuilder = queryBuilder.textSearch("name,description", searchQuery);
@@ -267,24 +261,25 @@ export default function ServicesBrowser() {
                     </div>
                   )}
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900">
+                    <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
                       {service.name}
+                      {service.provider?.verified && (
+                        <span className="inline-block mt-0 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full font-semibold">
+                          Verified
+                        </span>
+                      )}
                     </h3>
                     <p className="text-gray-700">{service.description}</p>
                     <div className="flex gap-3 mt-1 items-center text-gray-500 text-sm">
-                      {service.price_estimate && (
-                        <span>Rs {service.price_estimate}</span>
-                      )}
+                      {service.price_estimate && <span>Rs {service.price_estimate}</span>}
                       {service.provider?.city && <span>📍 {service.provider.city}</span>}
                       {service.provider?.rating && <span>⭐ {service.provider.rating.toFixed(1)}</span>}
-                      {service.category?.name && (
-                        <span className="italic">({service.category.name})</span>
-                      )}
+                      {service.category?.name && <span className="italic">({service.category.name})</span>}
                     </div>
                   </div>
                 </div>
               </Link>
-            ))
+            ))            
           )}
         </div>
       )}

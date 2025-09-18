@@ -25,7 +25,9 @@ export default function SearchProviders() {
 
     let queryBuilder = supabase
       .from("providers")
-      .select("id, name, username, city, image_url, rating, verified");
+      .select("id, name, username, city, image_url, rating, verified")
+      .order("rating", { ascending: false }); // highest rated first
+      //.limit(20); // <- only fetch top 20 services
 
     if (searchQuery) {
       queryBuilder = queryBuilder.or(
@@ -91,18 +93,18 @@ export default function SearchProviders() {
                   </div>
                 )}
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">
+                  <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
                     {provider.name}
+                    {provider.verified && (
+                      <span className="inline-block mt-0 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full font-semibold">
+                        Verified
+                      </span>
+                    )}
                   </h3>
                   <p className="text-gray-500">@{provider.username}</p>
                   <div className="flex gap-3 mt-1 items-center text-gray-500 text-sm">
                     {provider.city && <span>📍 {provider.city}</span>}
                     {provider.rating && <span>⭐ {provider.rating.toFixed(1)}</span>}
-                    {provider.verified && (
-                      <span className="text-blue-600 font-medium">
-                        ✔ Verified
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>
