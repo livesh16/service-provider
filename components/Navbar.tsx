@@ -174,12 +174,12 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="https://qbjgfnlpmcyxjxopsnvt.supabase.co/storage/v1/object/public/service_providers_other/logo.png"
-            alt="MauService Logo"
+            alt="MauServe Logo"
             width={40}      // small logo width
             height={40}     // small logo height
             className="object-contain"
           />
-          <span className="text-2xl font-bold text-gray-900">MauService</span>
+          <span className="text-2xl font-bold text-gray-900">MauServe</span>
         </Link>
 
         {/* Desktop Links */}
