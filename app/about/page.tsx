@@ -16,7 +16,7 @@ export default function AboutPage() {
         </p>
 
         {/* How it works */}
-        <div className="bg-white shadow-lg rounded-2xl p-8 mb-12">
+        <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-8 mb-12">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
             How It Works
           </h2>
@@ -40,18 +40,30 @@ export default function AboutPage() {
         </div>
 
         {/* Contact */}
-        <div className="bg-gray-600 text-white rounded-2xl shadow-lg p-8 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Get in Touch</h2>
-          <p className="mb-6">
-            Interested in adding your service or have questions about the
-            platform? Reach out to us — we’d love to hear from you.
+        <div className="bg-gray-600 rounded-2xl shadow-lg p-6 sm:p-8 text-center">
+          <h2 className="text-2xl font-semibold text-white mb-4">Get in Touch</h2>
+          <p className="text-gray-200 mb-6">
+            Whether you’re a customer with questions or a provider looking to
+            join, here’s how you can reach us:
           </p>
-          <Link
-            href="mailto:contact@mauserve.com"
-            className="inline-block px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition"
-          >
-            Email Us
-          </Link>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* General contact */}
+            <Link
+              href="mailto:contact@mauserve.com"
+              className="inline-block px-6 py-3 bg-white !text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition"
+            >
+              General Inquiries
+            </Link>
+
+            {/* Provider registration */}
+            <Link
+              href="mailto:register@mauserve.com"
+              className="inline-block px-6 py-3 bg-white !text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition"
+            >
+              Provider Registration
+            </Link>
+          </div>
         </div>
       </div>
     </div>
