@@ -32,6 +32,10 @@ export const authOptions: NextAuthOptions = {
         }
 
         // Attach Supabase UUID to user
+        // NextAuth's `user` type does not include a database `id`.
+        // We know at runtime we can attach one, so we temporarily
+        // assert that `user` is its existing type PLUS `{ id: string }`.
+        // This is a TypeScript-only cast; at runtime this is just `user.id = ...`.
         (user as typeof user & { id: string }).id = data.id;
         return true;
       } catch (err) {
