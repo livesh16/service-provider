@@ -98,9 +98,10 @@ export default function ProviderRegistration({ categories }: Props) {
       if (!res.ok) throw new Error(data.error);
 
       showToast("Application submitted successfully!", "success");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Submission failed";
       console.error(err);
-      showToast(err.message || "Submission failed", "error");
+      showToast(errorMessage, "error");
     } finally {
       setLoading(false);
     }
@@ -301,7 +302,7 @@ export default function ProviderRegistration({ categories }: Props) {
                       )}
                         {/* Note for users */}
                         <p className="mt-1 text-sm text-gray-500">
-                            💡 If you don't find an appropriate category for your service, please reach out to us via email.
+                            💡 If you don&apos;t find an appropriate category for your service, please reach out to us via email.
                         </p>
                     </div>
 

@@ -42,13 +42,13 @@ export async function POST(req: NextRequest) {
     const profilePath = `profiles/${username}-${Date.now()}`;
     const idPath = `ids/${username}-${Date.now()}`;
 
-    let { error: uploadProfileErr } = await supabaseServer.storage
+    const { error: uploadProfileErr } = await supabaseServer.storage
       .from("provider-profile-images")
       .upload(profilePath, profileImageFile);
 
     if (uploadProfileErr) throw uploadProfileErr;
 
-    let { error: uploadIdErr } = await supabaseServer.storage
+    const { error: uploadIdErr } = await supabaseServer.storage
       .from("provider-id-documents")
       .upload(idPath, idDocumentFile);
 
@@ -120,9 +120,10 @@ export async function POST(req: NextRequest) {
           approvalToken,
           services,
         });
-      } catch (emailError: any) {
+      } catch (emailError: unknown) {
         // Log email error but don't fail the application submission
-        console.error("Failed to send approval email:", emailError);
+        const errorMessage = emailError instanceof Error ? emailError.message : "Unknown error";
+        console.error("Failed to send approval email:", errorMessage);
         // Optionally, you could store this error or retry later
       }
     }
@@ -131,10 +132,11 @@ export async function POST(req: NextRequest) {
       { message: "Application submitted", approvalToken },
       { status: 200 }
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(err);
+    const errorMessage = err instanceof Error ? err.message : "Something went wrong";
     return NextResponse.json(
-      { error: err.message || "Something went wrong" },
+      { error: errorMessage },
       { status: 400 }
     );
   }

@@ -332,8 +332,9 @@ export async function GET(req: NextRequest) {
       status: 200,
       headers: { "Content-Type": "text/html" },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Approval error:", err);
+    const errorMessage = err instanceof Error ? err.message : "Failed to approve provider. Please try again later.";
     const errorHtml = `
       <!DOCTYPE html>
       <html>
@@ -367,7 +368,7 @@ export async function GET(req: NextRequest) {
         <body>
           <div class="container">
             <h1>❌ Error</h1>
-            <p>${err.message || "Failed to approve provider. Please try again later."}</p>
+            <p>${errorMessage}</p>
           </div>
         </body>
       </html>

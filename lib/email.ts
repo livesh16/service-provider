@@ -121,8 +121,9 @@ export async function sendProviderApplicationEmail(
     }
 
     return { success: true, emailId: emailData?.id };
-  } catch (error: any) {
-    console.error("Failed to send email:", error);
-    throw new Error(`Email sending failed: ${error.message}`);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Failed to send email:", errorMessage);
+    throw new Error(`Email sending failed: ${errorMessage}`);
   }
 }
