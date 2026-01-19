@@ -52,8 +52,8 @@ export default async function ProviderPage({ params }: Props) {
   
       const services = dataServices as Service[] | null;
 
-        // Fetch reviews (public data)
-        const { data: reviews } = await supabase
+      // Fetch reviews (public data)
+      const { data: reviews } = await supabase
         .from("reviews")
         .select("id, provider_id, user_id, user_name, rating, comment, created_at")
         .eq("provider_id", provider.id)
@@ -84,7 +84,7 @@ export default async function ProviderPage({ params }: Props) {
                 {provider.description}
               </p>
               <div className="mt-3 flex flex-wrap justify-center md:justify-start items-center gap-4">
-                {provider.rating !== undefined && (
+                {provider.rating != null && (
                   <p className="text-yellow-500 font-semibold">⭐ {provider.rating.toFixed(1)}</p>
                 )}
                 {provider.city && (

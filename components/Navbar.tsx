@@ -49,6 +49,14 @@ export default function Navbar() {
       )}
 
       <li>
+        <Link href="/service-providers/registration">
+          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+            Become a Provider
+          </button>
+        </Link>
+      </li>
+
+      <li>
         {status !== "loading" &&
           (session ? (
             <button
@@ -78,6 +86,16 @@ export default function Navbar() {
 
   const mobileLinks = (
     <>
+      <li>
+        <Link
+          href="/service-providers/registration"
+          className={mobileLinkClass("/service-providers/registration") + " bg-green-600 text-white hover:bg-green-700"}
+          onClick={() => handleMobileLinkClick("/service-providers/registration")}
+        >
+          Become a Provider
+        </Link>
+      </li>
+
       <li>
         <Link
           href="/"
@@ -182,22 +200,22 @@ export default function Navbar() {
           <span className="text-2xl font-bold text-gray-900">MauServe</span>
         </Link>
 
-        {/* Desktop Links */}
-        <ul className="hidden md:flex gap-8 text-gray-700 font-medium items-center">
+        {/* Desktop Links (ONLY large screens) */}
+        <ul className="hidden lg:flex gap-8 text-gray-700 font-medium items-center">
           {desktopLinks}
         </ul>
 
         {/* Hamburger Button */}
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <button onClick={toggleMenu}>
             {isOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu (used up to lg) */}
       {isOpen && (
-        <ul className="flex flex-col gap-2 px-2 py-4 md:hidden text-gray-700 font-medium bg-white/95 backdrop-blur-md shadow-lg">
+        <ul className="flex flex-col gap-2 px-2 py-4 lg:hidden text-gray-700 font-medium bg-white/95 backdrop-blur-md shadow-lg">
           {mobileLinks}
         </ul>
       )}

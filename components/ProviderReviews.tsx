@@ -41,8 +41,9 @@ export default function ProviderReviews({ providerId, initialReviews}: Props) {
     if (error) {
       console.error("Supabase error:", error);
       setError("Failed to fetch reviews.");
+      setReviews([]); // Ensure reviews is always an array
     } else {
-      setReviews(data || []);
+      setReviews(Array.isArray(data) ? data : []); // Defensive check
     }
     setFetchingReviews(false);
   };

@@ -57,7 +57,7 @@ export default function ProviderCard({ provider}: ProviderCardProps) {
 
                 {/* Rating and City */}
                 <div className="mt-4 flex justify-center items-center gap-10 px-4">
-                    {rating !== undefined && (
+                    {rating != null && (
                     <p className="text-yellow-500 font-semibold">⭐ {rating.toFixed(1)}</p>
                     )}
                     {city && (
