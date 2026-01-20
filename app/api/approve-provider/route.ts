@@ -61,12 +61,15 @@ export async function GET(req: NextRequest) {
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");
 
-    // Find the application with this token hash
+    // Find the pending application with this token hash
     const { data: application, error: appError } = await supabaseServer
       .from("provider_applications")
       .select("*")
       .eq("approval_token_hash", tokenHashHex)
+      .eq("status", "pending")
       .single();
+
+    console.log("here", appError);
 
     if (appError || !application) {
       const errorHtml = `
@@ -258,8 +261,12 @@ export async function GET(req: NextRequest) {
     // Mark application as approved
     const { error: updateError } = await supabaseServer
       .from("provider_applications")
-      .update({ approved: true, approved_at: new Date().toISOString() })
-      .eq("id", application.id);
+      .update({
+        status: "approved",
+        reviewed_at: new Date().toISOString(),
+      })
+      .eq("id", application.id)
+      .eq("status", "pending"); // safety guard
 
     if (updateError) {
       console.error("Failed to mark application as approved:", updateError);
