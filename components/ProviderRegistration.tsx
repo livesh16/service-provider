@@ -119,7 +119,7 @@ export default function ProviderRegistration({ categories }: Props) {
           to customers.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-10">
+        <form onSubmit={handleSubmit} className="space-y-10" noValidate>
           {/* BASIC INFO */}
           <section>
             <h2 className="text-2xl font-semibold mb-4 text-gray-900">

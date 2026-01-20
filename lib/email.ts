@@ -24,9 +24,13 @@ export async function sendProviderApplicationEmail(
   adminEmail: string,
   data: ProviderApplicationEmailData
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_VERCEL_URL 
-    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` 
-    : "http://localhost:3001";
+
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL
+      ? `https://${process.env.NEXT_PUBLIC_BASE_URL}`
+      : process.env.NEXT_PUBLIC_VERCEL_URL
+        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+        : "http://localhost:3001";
 
   const approveUrl = `${baseUrl}/api/approve-provider?token=${encodeURIComponent(data.approvalToken)}`;
 
