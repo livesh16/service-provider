@@ -25,10 +25,7 @@ interface Props {
 }
 
 export default function ProviderRegistration({ categories }: Props) {
-  const [services, setServices] = useState<Service[]>([
-    { name: "", price_estimate: 0, description: "", category_id: "" },
-  ]);
-  const [formData, setFormData] = useState({
+  const [basicInfo, setBasicInfo] = useState({
     name: "",
     username: "",
     email: "",
@@ -37,6 +34,10 @@ export default function ProviderRegistration({ categories }: Props) {
     description: "",
   });
 
+  const [services, setServices] = useState<Service[]>([
+    { name: "", price_estimate: 0, description: "", category_id: "" },
+  ]);
+
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [idDocument, setIdDocument] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -44,8 +45,8 @@ export default function ProviderRegistration({ categories }: Props) {
   const [categoryQueries, setCategoryQueries] = useState<string[]>([]);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const updateForm = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const updateBasicInfo = (field: string, value: string) => {
+    setBasicInfo((prev) => ({ ...prev, [field]: value }));
   };
 
   const addService = () => {
@@ -79,12 +80,12 @@ export default function ProviderRegistration({ categories }: Props) {
 
     try {
       const fd = new FormData();
-      fd.append("name", formData.name);
-      fd.append("username", formData.username);
-      fd.append("email", formData.email);
-      fd.append("phone_number", formData.phone_number);
-      fd.append("city", formData.city);
-      fd.append("description", formData.description);
+      fd.append("name", basicInfo.name);
+      fd.append("username", basicInfo.username);
+      fd.append("email", basicInfo.email);
+      fd.append("phone_number", basicInfo.phone_number);
+      fd.append("city", basicInfo.city);
+      fd.append("description", basicInfo.description);
       if (profileImage) fd.append("profileImage", profileImage);
       if (idDocument) fd.append("idDocument", idDocument);
       fd.append("services", JSON.stringify(services));
@@ -98,6 +99,20 @@ export default function ProviderRegistration({ categories }: Props) {
       if (!res.ok) throw new Error(data.error);
 
       showToast("Application submitted successfully!", "success");
+
+      // **RESET ALL FORM FIELDS**
+      setBasicInfo({
+        name: "",
+        username: "",
+        email: "",
+        phone_number: "",
+        city: "",
+        description: "",
+      });
+      setServices([{ name: "", price_estimate: 0, description: "", category_id: "" }]);
+      setCategoryQueries([]);
+      setProfileImage(null);
+      setIdDocument(null);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Submission failed";
       console.error(err);
@@ -132,9 +147,9 @@ export default function ProviderRegistration({ categories }: Props) {
                   <div key={idx} className="relative w-full">
                     <input
                       type={field === "email" ? "email" : "text"}
-                      value={formData[field as keyof typeof formData]}
+                      value={basicInfo[field as keyof typeof basicInfo]}
                       onChange={(e) =>
-                        updateForm(field, e.target.value)
+                        updateBasicInfo(field, e.target.value)
                       }
                       required
                       className="peer block w-full rounded-md border border-gray-300 px-3 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
@@ -156,8 +171,8 @@ export default function ProviderRegistration({ categories }: Props) {
               <textarea
                 placeholder="Describe yourself and your experience"
                 className="peer block w-full rounded-md border border-gray-300 px-3 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 min-h-[180px] resize-y"
-                value={formData.description}
-                onChange={(e) => updateForm("description", e.target.value)}
+                value={basicInfo.description}
+                onChange={(e) => updateBasicInfo("description", e.target.value)}
               />
               <label className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-gray-600 peer-focus:text-sm">
                 Describe yourself and your experience
