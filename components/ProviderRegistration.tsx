@@ -233,6 +233,7 @@ export default function ProviderRegistration({ categories }: Props) {
                 <span>{idDocument ? idDocument.name : "Upload ID Document"}</span>
                 <input
                   type="file"
+                  accept="application/pdf,image/*"
                   onChange={(e) => setIdDocument(e.target.files?.[0] || null)}
                   className="hidden"
                 />
