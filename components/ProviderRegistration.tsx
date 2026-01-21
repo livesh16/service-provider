@@ -91,13 +91,30 @@ export default function ProviderRegistration({ categories }: Props) {
 
     setLoading(true);
     try {
+
+        // Trim all text inputs
+        const trimmedBasicInfo = {
+            name: basicInfo.name.trim(),
+            username: basicInfo.username.trim(),
+            email: basicInfo.email.trim(),
+            phone_number: basicInfo.phone_number.trim(),
+            city: basicInfo.city.trim(),
+            description: basicInfo.description.trim(),
+        };
+
+        if (!trimmedBasicInfo.email || !/^\S+@\S+\.\S+$/.test(trimmedBasicInfo.email)) {
+            showToast("Please enter a valid email", "error");
+            setLoading(false);
+            return;
+        }
+
       const fd = new FormData();
-      fd.append("name", basicInfo.name);
-      fd.append("username", basicInfo.username);
-      fd.append("email", basicInfo.email.trim());
-      fd.append("phone_number", basicInfo.phone_number);
-      fd.append("city", basicInfo.city);
-      fd.append("description", basicInfo.description);
+      fd.append("name", trimmedBasicInfo.name);
+      fd.append("username", trimmedBasicInfo.username);
+      fd.append("email", trimmedBasicInfo.email.trim());
+      fd.append("phone_number", trimmedBasicInfo.phone_number);
+      fd.append("city", trimmedBasicInfo.city);
+      fd.append("description", trimmedBasicInfo.description);
       if (profileImage) fd.append("profileImage", profileImage);
       if (idDocument) fd.append("idDocument", idDocument);
       fd.append("services", JSON.stringify(services));
@@ -113,7 +130,6 @@ export default function ProviderRegistration({ categories }: Props) {
       showToast("Application submitted successfully!", "success");
 
       // **RESET ALL FORM FIELDS**
-      /*
       setBasicInfo({
         name: "",
         username: "",
@@ -126,7 +142,7 @@ export default function ProviderRegistration({ categories }: Props) {
       setCategoryQueries([]);
       setProfileImage(null);
       setIdDocument(null);
-      */
+
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Submission failed";
       console.error(err);
