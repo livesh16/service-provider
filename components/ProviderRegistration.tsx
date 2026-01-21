@@ -74,6 +74,32 @@ export default function ProviderRegistration({ categories }: Props) {
     }, 4000);
   };
 
+    const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const allowedTypes = ["image/jpeg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+            showToast("Please upload a JPG or PNG image", "error");
+            return;
+        }
+
+        setProfileImage(file);
+    };
+
+    const handleIdDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+            showToast("Please upload a PDF, JPG, or PNG", "error");
+            return;
+        }
+
+        setIdDocument(file);
+    };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -222,8 +248,8 @@ export default function ProviderRegistration({ categories }: Props) {
                 <span>{profileImage ? profileImage.name : "Upload Profile Image"}</span>
                 <input
                   type="file"
-                  accept="image/*"
-                  onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
+                  accept="image/jpeg,image/png"
+                  onChange={handleProfileImageChange}
                   className="hidden"
                 />
               </label>
@@ -233,8 +259,8 @@ export default function ProviderRegistration({ categories }: Props) {
                 <span>{idDocument ? idDocument.name : "Upload ID Document"}</span>
                 <input
                   type="file"
-                  accept="application/pdf,image/*"
-                  onChange={(e) => setIdDocument(e.target.files?.[0] || null)}
+                  accept="application/pdf,image/jpeg,image/png"
+                  onChange={handleIdDocumentChange}
                   className="hidden"
                 />
               </label>
