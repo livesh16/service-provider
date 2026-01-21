@@ -94,7 +94,7 @@ export default function ProviderRegistration({ categories }: Props) {
       const fd = new FormData();
       fd.append("name", basicInfo.name);
       fd.append("username", basicInfo.username);
-      fd.append("email", basicInfo.email);
+      fd.append("email", basicInfo.email.trim());
       fd.append("phone_number", basicInfo.phone_number);
       fd.append("city", basicInfo.city);
       fd.append("description", basicInfo.description);
