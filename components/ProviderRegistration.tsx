@@ -76,8 +76,20 @@ export default function ProviderRegistration({ categories }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
+    if (!profileImage) {
+        showToast("Please upload a profile image", "error");
+        setLoading(false);
+        return;
+    }
+
+    if (!idDocument) {
+        showToast("Please upload an ID document", "error");
+        setLoading(false);
+        return;
+    }
+
+    setLoading(true);
     try {
       const fd = new FormData();
       fd.append("name", basicInfo.name);
@@ -195,7 +207,6 @@ export default function ProviderRegistration({ categories }: Props) {
                   accept="image/*"
                   onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
                   className="hidden"
-                  required
                 />
               </label>
 
@@ -206,7 +217,6 @@ export default function ProviderRegistration({ categories }: Props) {
                   type="file"
                   onChange={(e) => setIdDocument(e.target.files?.[0] || null)}
                   className="hidden"
-                  required
                 />
               </label>
             </div>
