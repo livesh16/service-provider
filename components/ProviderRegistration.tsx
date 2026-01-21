@@ -113,6 +113,7 @@ export default function ProviderRegistration({ categories }: Props) {
       showToast("Application submitted successfully!", "success");
 
       // **RESET ALL FORM FIELDS**
+      /*
       setBasicInfo({
         name: "",
         username: "",
@@ -125,6 +126,7 @@ export default function ProviderRegistration({ categories }: Props) {
       setCategoryQueries([]);
       setProfileImage(null);
       setIdDocument(null);
+      */
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Submission failed";
       console.error(err);
