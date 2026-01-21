@@ -74,55 +74,7 @@ export default function ProviderRegistration({ categories }: Props) {
     }, 4000);
   };
 
-  const normalizeImageIfNeeded = (file: File): Promise<File> => {
-    // PDFs or non-images → return as-is
-    if (!file.type.startsWith("image/")) {
-        return Promise.resolve(file);
-    }
-
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        const img = new Image();
-
-        reader.onload = () => {
-        img.onload = () => {
-            const canvas = document.createElement("canvas");
-            canvas.width = img.width;
-            canvas.height = img.height;
-
-            const ctx = canvas.getContext("2d");
-            if (!ctx) return reject(new Error("Canvas error"));
-
-            ctx.drawImage(img, 0, 0);
-
-            canvas.toBlob(
-            (blob) => {
-                if (!blob) return reject(new Error("Blob error"));
-
-                resolve(
-                new File(
-                    [blob],
-                    file.name.replace(/\.\w+$/, ".jpg"),
-                    { type: "image/jpeg" }
-                )
-                );
-            },
-            "image/jpeg",
-            0.92
-            );
-        };
-
-        img.onerror = reject;
-        img.src = reader.result as string;
-        };
-
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-    };
-
-
-    const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -132,15 +84,10 @@ export default function ProviderRegistration({ categories }: Props) {
             return;
         }
 
-          try {
-            const safeFile = await normalizeImageIfNeeded(file);
-            setProfileImage(safeFile);
-        } catch {
-            showToast("Failed to process image. Try another photo.", "error");
-        }
+        setProfileImage(file);
     };
 
-    const handleIdDocumentChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleIdDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -150,12 +97,7 @@ export default function ProviderRegistration({ categories }: Props) {
             return;
         }
 
-          try {
-            const safeFile = await normalizeImageIfNeeded(file);
-            setIdDocument(safeFile);
-        } catch {
-            showToast("Failed to process document. Try another file.", "error");
-        }
+        setIdDocument(file);
     };
 
   const handleSubmit = async (e: React.FormEvent) => {
