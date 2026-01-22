@@ -11,6 +11,7 @@ export interface ProviderApplicationEmailData {
   description: string;
   profileImageUrl: string;
   idDocumentUrl: string;
+  idDocumentType: string;
   approvalToken: string;
   services: Array<{
     name: string;
@@ -82,11 +83,11 @@ export async function sendProviderApplicationEmail(
 
           <h2 style="color: #374151; margin-top: 24px;">ID Document</h2>
           <div style="text-align: center; margin: 16px 0;">
-            <img 
-              src="${data.idDocumentUrl}" 
-              alt="ID Document" 
-              style="max-width: 100%; border-radius: 8px; border: 2px solid #e5e7eb;"
-            />
+            ${
+              data.idDocumentType === "application/pdf"
+                ? `<a href="${data.idDocumentUrl}" target="_blank" style="display:inline-block; padding:12px 20px; background:#3b82f6; color:white; border-radius:6px; text-decoration:none; font-weight:bold;">View PDF</a>`
+                : `<img src="${data.idDocumentUrl}" alt="ID Document" style="max-width:100%; border-radius:8px; border:2px solid #e5e7eb;" />`
+            }
           </div>
 
           <h2 style="color: #374151; margin-top: 24px;">Services Offered</h2>

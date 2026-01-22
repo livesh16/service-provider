@@ -18,6 +18,8 @@ export async function POST(req: NextRequest) {
     const profileImageFile = formData.get("profileImage") as File;
     const idDocumentFile = formData.get("idDocument") as File;
 
+    const idDocumentType = idDocumentFile.type; // e.g., "application/pdf" or "image/jpeg"
+
     // 1️⃣ Generate approval token + hash
     // Generate a secure, random one-time token that will be sent to the admin
     // in the approval email link (e.g. ?token=XYZ).
@@ -117,6 +119,7 @@ export async function POST(req: NextRequest) {
           description,
           profileImageUrl,
           idDocumentUrl,
+          idDocumentType,
           approvalToken,
           services,
         });
